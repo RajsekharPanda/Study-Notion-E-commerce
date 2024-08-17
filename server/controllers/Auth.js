@@ -112,23 +112,23 @@ exports.signup = async (req, res) => {
     }
 
     // find most recent otp sent
-    const recentOtp = await OTP.find({ email })
+    const recentOtp = await OTP.find({ email:email })
       .sort({ createdAt: -1 })
       .limit(1);
     console.log(recentOtp);
 
     //validate otp
-    if (recentOtp.length == 0) {
+    if (!recentOtp.otp) {
       //otp not found
       return res.status(400).json({
         success: false,
-        message: "OTP not found",
+        message: "OTP not found (problem here)",
       });
     } else if (otp !== recentOtp) {
       //invalid otp
       return res.status(400).json({
         success: false,
-        message: "Invalid OTP",
+        message: "Invalid OTP (problem here)",
       });
     }
 

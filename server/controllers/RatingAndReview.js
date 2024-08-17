@@ -3,7 +3,7 @@ const Course = require("../models/Course");
 const { default: mongoose } = require("mongoose");
 
 //createRating
-const createRating = async (req, res) => {
+exports.createRating = async (req, res) => {
   try {
     //get user id
     const userId = req.user.id;
