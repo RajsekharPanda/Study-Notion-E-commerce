@@ -1,4 +1,4 @@
-const SubSection = require("../models/SubSection");
+const {SubSection} = require("../models/SubSection");
 const Section = require("../models/Section");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
@@ -6,11 +6,11 @@ const { uploadImageToCloudinary } = require("../utils/imageUploader");
 exports.createSubSection = async (req, res) => {
   try {
     //fetch data from req body
-    const { title, timeDuration, description, sectionId } = req.body;
+    const { title, description, sectionId } = req.body;
     //extract file/video
     const video = req.files.videoFile;
     //validation
-    if (!title || !timeDuration || !description || !sectionId || !video) {
+    if (!title || !description || !sectionId || !video) {
       return res.status(400).json({
         success: false,
         message: "All fields are required",
@@ -24,10 +24,11 @@ exports.createSubSection = async (req, res) => {
     //create subSection
     const SubSectionDetails = await SubSection.create({
       title: title,
-      timeDuration: timeDuration,
+      timeDuration: `${uploadDetails.duration}`,
       description: description,
       videoUrl: uploadDetails.secure_url,
     });
+    console.log(SubSectionDetails);
     //update section with this sub section objectId
     const updatedSection = await Section.findByIdAndUpdate(
       { _id: sectionId },
@@ -37,7 +38,10 @@ exports.createSubSection = async (req, res) => {
         },
       },
       { new: true }
-    );
+    )
+    .populate("subSection")
+    .exec();
+    console.log("first")
     //log updated section here, after adding populate query
     //return response
     return res.status(200).json({

@@ -154,6 +154,7 @@ exports.getCourseDetails = async (req, res) => {
   try {
     //get id
     const { courseId } = req.body;
+    console.log(courseId);
     //find course details
     const courseDetails = await Course.find({ _id: courseId })
       .populate({
@@ -163,7 +164,7 @@ exports.getCourseDetails = async (req, res) => {
         },
       })
       .populate("category")
-      //.populate("ratingAndreviews")
+      // .populate("ratingAndreviews")
       .populate({
         path: "courseContent",
         populate: {
