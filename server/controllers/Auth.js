@@ -3,7 +3,7 @@ const OTP = require("../models/OTP");
 const otpGenerator = require("otp-generator");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { Profile } = require("../models/Profile");
+const Profile  = require("../models/Profile");
 require("dotenv").config();
 //send OTP
 exports.sendOTP = async function (req, res) {
@@ -144,7 +144,7 @@ exports.signup = async (req, res) => {
       about: null,
       contactNumber: null,
     });
-    // console.log(profileDetails);
+    console.log(profileDetails);
 
     const user = await User.create({
       firstName,

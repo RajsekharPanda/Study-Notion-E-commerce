@@ -46,61 +46,6 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-// exports.updateProfile = async (req, res) => {
-//   try {
-//     // Get data
-//     const { dateOfBirth = "", about = "", contactNumber, gender } = req.body;
-//     // Get userId
-//     const id = req.user.id;
-//     // Validate data
-//     if (!contactNumber || !gender || !id) {
-//       return res.status(400).json({
-//         success: false,
-//         message: "All fields are required",
-//       });
-//     }
-//     // Find user
-//     const userDetails = await User.findById(id);
-//     if (!userDetails) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "User not found",
-//       });
-//     }
-    
-//     // Get the profile ID from user details
-//     const profileId = userDetails.additionalDetails;
-
-//     // Find profile by profile ID
-//     const profileDetails = await Profile.findById(profileId);
-//     if (!profileDetails) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "Profile not found",
-//       });
-//     }
-
-//     // Update profile details
-//     profileDetails.dateOfBirth = dateOfBirth;
-//     profileDetails.about = about;
-//     profileDetails.gender = gender;
-//     profileDetails.contactNumber = contactNumber;
-//     await profileDetails.save();
-
-//     // Return response
-//     return res.status(200).json({
-//       success: true,
-//       message: "Profile updated successfully",
-//       profileDetails,
-//     });
-//   } catch (error) {
-//     return res.status(500).json({
-//       success: false,
-//       message: "Unable to update profile, please try again",
-//       error: error.message,
-//     });
-//   }
-// };
 
 //delete profile
 exports.deleteAccount = async (req, res) => {
