@@ -1,4 +1,4 @@
-const {SubSection} = require("../models/SubSection");
+const { SubSection } = require("../models/SubSection");
 const Section = require("../models/Section");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 
@@ -28,7 +28,8 @@ exports.createSubSection = async (req, res) => {
       description: description,
       videoUrl: uploadDetails.secure_url,
     });
-    console.log(SubSectionDetails);
+
+    console.log(sectionId);
     //update section with this sub section objectId
     const updatedSection = await Section.findByIdAndUpdate(
       { _id: sectionId },
@@ -39,9 +40,10 @@ exports.createSubSection = async (req, res) => {
       },
       { new: true }
     )
-    .populate("subSection")
-    .exec();
-    console.log("first")
+      .populate("subSection")
+      .exec();
+
+    // console.log("first")
     //log updated section here, after adding populate query
     //return response
     return res.status(200).json({
