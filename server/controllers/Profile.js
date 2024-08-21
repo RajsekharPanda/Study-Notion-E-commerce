@@ -51,6 +51,7 @@ exports.updateProfile = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
   try {
     //get id
+    console.log("Printing Id", req.user.id)
     const id = req.user.id;
     //validation
     const userDetails = await User.findById(id);
