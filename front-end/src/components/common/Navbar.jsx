@@ -21,7 +21,7 @@ const subLinks = [
 ];
 
 const Navbar = () => {
-  console.log("Printing base url: ", process.env.REACT_APP_BASE_URL);
+  // console.log("Printing base url: ", process.env.REACT_APP_BASE_URL);
   const { token } = useSelector((state) => state.auth);
   const { user } = useSelector((state) => state.profile);
   const { totalItems } = useSelector((state) => state.cart);
@@ -32,7 +32,7 @@ const Navbar = () => {
   const fetchSublinks = async () => {
     try {
       const result = await apiConnector("GET", categories.CATEGORIES_API);
-      console.log("Printing Sublinks result:", result);
+      // console.log("Printing Sublinks result:", result);
       setSsubLinks(result.data.data);
     } catch (error) {
       console.log("Could not fetch the category list");
@@ -130,7 +130,7 @@ const Navbar = () => {
               </button>
             </Link>
           )}
-          {token !== null && <ProfileDropDown />}
+          {token && <ProfileDropDown />}
         </div>
       </div>
     </div>

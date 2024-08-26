@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AiOutlineCaretDown } from "react-icons/ai";
 import { VscDashboard, VscSignOut } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 
 import useOnClickOutside from "../../../hooks/useOnClickOutside";
 import { logout } from "../../../services/operations/authAPI";
+import { settingsEndpoints } from "../../../services/apis";
+import axios from "axios";
+import { setUser } from "../../../slices/profileSlice";
 
 export default function ProfileDropdown() {
   const { user } = useSelector((state) => state.profile);
@@ -13,6 +16,26 @@ export default function ProfileDropdown() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+  
+
+  useEffect(() => {
+  if (!user) {
+    const authToken = localStorage.getItem('token'); 
+    if (authToken) {
+      axios.get(settingsEndpoints.GET_USER_DETAILS_API, {
+        headers: {
+          Authorization: 'Bearer ' + authToken 
+        }
+      })
+      .then(response => {
+        dispatch(setUser(JSON.stringify(response.data)));
+        // console.log("response.date" +JSON.stringify(response.data));
+      })
+      .catch(error => {
+        console.error('There was an error!', error);      });
+    }
+  }
+}, []);
 
   useOnClickOutside(ref, () => setOpen(false));
 
