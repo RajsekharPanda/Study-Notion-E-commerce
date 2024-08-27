@@ -16,27 +16,35 @@ export default function ProfileDropdown() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
-  
 
   useEffect(() => {
-  if (!user) {
-    const authToken = localStorage.getItem('token'); 
-    if (authToken) {
-      axios.get(settingsEndpoints.GET_USER_DETAILS_API, {
-        headers: {
-          Authorization: 'Bearer ' + authToken 
-        }
-      })
-      .then(response => {
-        dispatch(setUser(JSON.stringify(response.data)));
-        // console.log("response.date" +JSON.stringify(response.data));
-      })
-      .catch(error => {
-        console.error('There was an error!', error);      });
+    if (!user) {
+      const authToken = localStorage.getItem("token");
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        dispatch(setUser(JSON.parse(storedUser)));
+      } else if (authToken) {
+        axios
+          .get(settingsEndpoints.GET_USER_DETAILS_API, {
+            headers: {
+              Authorization: "Bearer " + authToken,
+            },
+          })
+          .then((response) => {
+            const userDetails = response.data;
+            localStorage.setItem("user", JSON.stringify(userDetails));
+            // dispatch(setUser(userDetails));
+            dispatch(setUser(JSON.stringify(response.data)));
+            console.log("response.date" + JSON.stringify(userDetails));
+            // console.log("response.date" +JSON.stringify(response.data));
+          })
+          .catch((error) => {
+            console.error("There was an error!", error);
+          });
+      }
     }
-  }
-}, []);
-
+  }, [user]);
+  console.log("user image" + user?.image);
   useOnClickOutside(ref, () => setOpen(false));
 
   if (!user) return null;
@@ -46,6 +54,7 @@ export default function ProfileDropdown() {
       <div className="flex items-center gap-x-1">
         <img
           src={user?.image}
+          // src={"https://api.dicebear.com/5.x/initials/svg?seed=Raj Panda"}
           alt={`profile-${user?.firstName}`}
           className="aspect-square w-[30px] rounded-full object-cover"
         />
