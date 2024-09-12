@@ -1,6 +1,6 @@
 const RatingAndReview = require("../models/RatingAndReview");
 const Course = require("../models/Course");
-const  mongoose  = require("mongoose");
+const mongoose = require("mongoose");
 
 //createRating
 exports.createRating = async (req, res) => {
@@ -41,8 +41,8 @@ exports.createRating = async (req, res) => {
       $push: {
         ratingAndReviews: ratingReview,
       },
-    })
-    await courseDetails.save()
+    });
+    await courseDetails.save();
     //return response
     return res.status(200).json({
       success: true,
@@ -51,7 +51,7 @@ exports.createRating = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.statues(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -90,10 +90,10 @@ exports.getAverageRating = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.statues(500).json({
+    return res.status(500).json({
       success: false,
       error: error.message,
-      message: "Failed to retrieve the rating for the course"
+      message: "Failed to retrieve the rating for the course",
     });
   }
 };
@@ -112,14 +112,14 @@ exports.getAllRatingReview = async (req, res) => {
         select: "courseName",
       })
       .exec();
-    res.statues(200).json({
+    res.status(200).json({
       success: true,
       message: "All reviews fetched successfully",
       data: allReviews,
     });
   } catch (error) {
     console.log(error);
-    return res.statues(500).json({
+    return res.status(500).json({
       success: false,
       message: "Failed to retrieve the rating and review for the course",
       error: error.message,
