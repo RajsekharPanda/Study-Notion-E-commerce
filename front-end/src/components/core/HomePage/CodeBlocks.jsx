@@ -15,11 +15,11 @@ const CodeBlocks = ({
   codeColor,
 }) => {
   return (
-    <div className={`flex ${position} my-20 justify-between gap-10`}>
+    <div className={`flex ${position} my-20 justify-between flex-col lg:gap-10 gap-10`}>
       {/*Section 1*/}
-      <div className="w-[50%] flex flex-col gap-8">
+      <div className="lg:w-[50%] w-[100%] flex flex-col gap-8">
         {heading}
-        <div className="text-richblack-300 font-bold ">{subheading}</div>
+        <div className="text-richblack-300 font-bold text-base -mt-3">{subheading}</div>
 
         <div className="flex gap-7 mt-7">
           <CTAButton active={ctabtn1.active} linkto={ctabtn1.linkto}>
@@ -36,8 +36,9 @@ const CodeBlocks = ({
       </div>
 
       {/*Section 2*/}
-      <div className=" h-fit  flex flex-row text-10[px] w-[100%] py-4 lg:w-[500px]">
+      <div className=" h-fit code-border flex flex-row sm:text-sm leading-[18px] sm:leading-6 relative text-[10px] w-[100%] lg:w-[470px]">
         {/*HW -> BG gradient*/}
+        {backgroudGradient}
 
         <div className="text-center flex flex-col w-[10%] text-richblack-400 font-inter font-bold">
           <p>1</p>

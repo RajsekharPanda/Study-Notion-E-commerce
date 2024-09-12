@@ -13,12 +13,12 @@ exports.resetPasswordToken = async (req, res) => {
     if (!user) {
       return res.json({
         success: false,
-        message: "Your email is not registered with us",
+        message: `This Email: ${email} is not Registered With Us Enter a Valid Email `,
       });
     }
-    //generate token
-    const token = crypto.randomUUID();
-    //update user by adding token and expiration time
+
+    const token = crypto.randomBytes(20).toString("hex")
+
     const updateDetails = await User.findOneAndUpdate(
       { email: email },
       { token: token, resetPasswordExpires: Date.now() + 5 * 60 * 1000 },
@@ -30,10 +30,10 @@ exports.resetPasswordToken = async (req, res) => {
     await mailSender(
       email,
       "Password Reset Link",
-      `Password Reset Link:${url}`
+      `Your Link for email verification is ${url}. Please click this url to reset your password.`
     );
     //return response
-    return res.json({
+    res.json({
       success: true,
       message:
         "Email sent successfully, please check email and change password",
@@ -53,7 +53,7 @@ exports.resetPassword = async (req, res) => {
     //data fetch
     const { password, confirmPassword, token } = req.body;
     //validation
-    if (password !== confirmPassword) {
+    if (confirmPassword !== password) {
       return res.json({
         success: false,
         message: "new password and confirm password do not match",
@@ -84,7 +84,7 @@ exports.resetPassword = async (req, res) => {
       { new: true }
     );
     //return response
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: "Password changed successfully",
     });

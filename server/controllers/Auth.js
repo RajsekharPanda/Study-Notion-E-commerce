@@ -5,6 +5,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Profile  = require("../models/Profile");
 require("dotenv").config();
+const mailSender = require("../utils/mailSender");
+const { passwordUpdated } = require("../mail/templates/passwordUpdate");
+
 //send OTP
 exports.sendOTP = async function (req, res) {
   try {
@@ -36,8 +39,6 @@ exports.sendOTP = async function (req, res) {
     while (result) {
       otp = otpGenerator(6, {
         upperCaseAlphabets: false,
-        lowerCaseAlphabets: false,
-        specialChars: false,
       });
 
       console.log("OTP generated", otp);
@@ -113,29 +114,27 @@ exports.signup = async (req, res) => {
     }
 
     // find most recent otp sent
-    const recentOtp = await OTP.find({ email: email })
-      .sort({ createdAt: -1 })
-      .limit(1)
-      .exec();
-    console.log(recentOtp[0].otp);
-
-    //validate otp
-    if (recentOtp[0].otp == 0) {
-      //otp not found
-      return res.status(400).json({
-        success: false,
-        message: "OTP not found (problem here)",
-      });
-    } else if (otp !== recentOtp[0].otp) {
-      //invalid otp
-      return res.status(400).json({
-        success: false,
-        message: "Invalid OTP (problem here)",
-      });
-    }
+    const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
+		console.log(response);
+		if (response.length === 0) {
+			// OTP not found for the email
+			return res.status(400).json({
+				success: false,
+				message: "The OTP is not valid",
+			});
+		} else if (otp !== response[0].otp) {
+			// Invalid OTP
+			return res.status(400).json({
+				success: false,
+				message: "The OTP is not valid",
+			});
+		}
 
     //Hash Password
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    let approved = "";
+		approved === "Instructor" ? (approved = false) : (approved = true);
 
     //create entry in db
     const profileDetails = await Profile.create({
@@ -144,7 +143,7 @@ exports.signup = async (req, res) => {
       about: null,
       contactNumber: null,
     });
-    console.log(profileDetails);
+    // console.log(profileDetails);
 
     const user = await User.create({
       firstName,
@@ -194,29 +193,29 @@ exports.login = async (req, res) => {
     }
     //check password and create jwt Token
     if (await bcrypt.compare(password, user.password)) {
-      const payload = {
-        email: user.email,
-        id: user._id,
-        accountType: user.accountType,
-      };
-      const token = jwt.sign(payload, process.env.JWT_SECRET, {
-        expiresIn: "2h",
-      });
-      user.token = token;
-      user.password = undefined;
+			const token = jwt.sign(
+				{ email: user.email, id: user._id, accountType: user.accountType },
+				process.env.JWT_SECRET,
+				{
+					expiresIn: "24h",
+				}
+			);
 
-      //create cookie and send response
-      const options = {
-        expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-        httpOnly: true,
-      };
-      res.cookie("token", token, options).status(200).json({
-        success: true,
-        token,
-        user,
-        message: "Logged in successfully",
-      });
-    } else {
+			// Save token to user document in database
+			user.token = token;
+			user.password = undefined;
+			// Set cookie for token and return success response
+			const options = {
+				expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+				httpOnly: true,
+			};
+			res.cookie("token", token, options).status(200).json({
+				success: true,
+				token,
+				user,
+				message: `User Login Success`,
+			});
+		} else {
       return res.status(401).json({
         success: false,
         message: "Password is incorrect",
@@ -238,7 +237,7 @@ exports.changePassword = async (req, res) => {
     const userDetails = await User.findById(req.user.id);
 
     // Get old password, new password, and confirm new password from req.body
-    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+    const { oldPassword, newPassword } = req.body;
 
     // Validate old password
     const isPasswordMatch = await bcrypt.compare(

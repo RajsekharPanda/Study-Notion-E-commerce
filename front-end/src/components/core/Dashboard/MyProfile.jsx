@@ -1,15 +1,16 @@
-import { RiEditBoxLine } from "react-icons/ri"
+import { RiEditBoxLine } from "react-icons/ri";
 
 import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import IconBtn from "../../common/IconBtn";
+import { formattedDate } from "../../../utils/dateFormatter";
 
 const MyProfile = () => {
   const { user } = useSelector((state) => state.profile);
   const navigate = useNavigate();
   return (
-    <div className="text-white">
+    <div>
       <h1 className="mb-14 text-3xl font-medium text-richblack-5">
         My Profile
       </h1>
@@ -87,18 +88,18 @@ const MyProfile = () => {
                 {user?.firstName}
               </p>
             </div>
-          </div>
-          <div>
-            <p className="mb-2 text-sm text-richblack-600">Email</p>
-            <p className="text-sm font-medium text-richblack-5">
-              {user?.email}
-            </p>
-          </div>
-          <div>
-            <p className="mb-2 text-sm text-richblack-600">Gender</p>
-            <p className="text-sm font-medium text-richblack-5">
-              {user?.additionalDetails?.gender ?? "Add Gender"}
-            </p>
+            <div>
+              <p className="mb-2 text-sm text-richblack-600">Email</p>
+              <p className="text-sm font-medium text-richblack-5">
+                {user?.email}
+              </p>
+            </div>
+            <div>
+              <p className="mb-2 text-sm text-richblack-600">Gender</p>
+              <p className="text-sm font-medium text-richblack-5">
+                {user?.additionalDetails?.gender ?? "Add Gender"}
+              </p>
+            </div>
           </div>
           <div className="flex flex-col gap-y-5">
             <div>
