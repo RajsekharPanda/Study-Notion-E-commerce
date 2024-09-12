@@ -44,7 +44,7 @@ const EnrolledCourses = () => {
             <p className="flex-1 px-2 py-3">Progress</p>
           </div>
           {/* Cards shure hote h ab */}
-          {enrolledCourses.map((course, index) => (
+          {enrolledCourses.map((course, i, arr) => (
             <div
               className={`flex items-center border border-richblack-700 ${
                 i === arr.length - 1 ? "rounded-b-lg" : "rounded-none"

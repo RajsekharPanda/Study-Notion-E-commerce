@@ -1,4 +1,4 @@
-import { FaStar } from "react-icons/fa";
+import { GiNinjaStar } from "react-icons/gi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ReactStars from "react-rating-stars-component";
 import { useDispatch, useSelector } from "react-redux";
