@@ -32,11 +32,9 @@ export default function Upload({
   }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: !video
-      ? { "image/*": [".jpeg", ".jpg", ".png"] }
-      : { "video/*": [".mp4"] },
+    accept: video ? "video/*" : "image/*",
     onDrop,
-  })
+  });
 
   const previewFile = (file) => {
     // console.log(file)
