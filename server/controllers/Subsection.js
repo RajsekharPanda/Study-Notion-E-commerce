@@ -5,6 +5,7 @@ const { uploadImageToCloudinary } = require("../utils/imageUploader");
 //create subsection
 exports.createSubSection = async (req, res) => {
   try {
+    console.log("Creating Subsection`")
     const { title, description, sectionId } = req.body;
     const video = req.files.videoFile;
     //validation
